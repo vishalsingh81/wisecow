@@ -16,8 +16,8 @@ ENV PATH="/usr/games:${PATH}"
 
 WORKDIR /app
 
-# Copy script
-COPY wisecow.sh /app/wisecow.sh
+# Copy script from src folder
+COPY src/wisecow.sh /app/wisecow.sh
 RUN chmod +x wisecow.sh
 
 EXPOSE 4499
