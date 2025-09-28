@@ -1,26 +1,41 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-      - name: Login to Docker Hub
+      - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push image
+      - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/wisecow:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/wisecow:latest
+          docker build -t vishalsingh81/wisecow:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push vishalsingh81/wisecow:latest
+
+      # Optional: Deploy to Kubernetes if you have cluster access
+      # - name: Set up kubectl
+      #   uses: azure/setup-kubectl@v3
+      #   with:
+      #     version: 'latest'
+      #
+      # - name: Apply manifests
+      #   run: |
+      #     kubectl apply -f k8s-manifests/
 
